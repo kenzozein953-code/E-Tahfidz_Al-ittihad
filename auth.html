@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login E-Tahfidz - Al Ittihad 💼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="gradient-bg flex items-center justify-center min-h-screen p-6">
+
+    <div class="glass-card p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-emerald-100/20">
+        <div class="text-center mb-10">
+            <div class="bg-emerald-100 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="fas fa-mosque text-emerald-800 text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Al Ittihad</h1>
+            <p class="text-slate-500 mt-2 font-medium">Digital Tahfidz System 💰</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2 ml-1">Email Bisnis</label>
+                <div class="relative">
+                    <i class="fas fa-envelope absolute left-4 top-4 text-slate-400"></i>
+                    <input type="email" id="loginEmail" class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all text-slate-700" placeholder="admin@ittihad.com" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2 ml-1">Password</label>
+                <div class="relative">
+                    <i class="fas fa-lock absolute left-4 top-4 text-slate-400"></i>
+                    <input type="password" id="loginPassword" class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all text-slate-700" placeholder="••••••••" required>
+                </div>
+            </div>
+            
+            <button type="submit" id="btnMasuk" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center">
+                <span>MASUK KE DASHBOARD</span>
+                <i class="fas fa-arrow-right ml-2 text-sm"></i>
+            </button>
+        </form>
+        
+        <p id="authError" class="text-red-500 text-xs mt-6 text-center font-bold hidden bg-red-50 p-3 rounded-xl border border-red-100"></p>
+        
+        <div class="mt-8 pt-8 border-t border-slate-100 text-center">
+            <p class="text-slate-400 text-xs">CodingX Indonet Security System v2.1 💼</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIG: Pastikan isi ini sama dengan yang ada di index.html bos-tuan besar
+        const firebaseConfig = {
+            apiKey: "ISI_API_KEY_ANDA",
+            authDomain: "ISI_DOMAIN_ANDA",
+            projectId: "ISI_ID_ANDA",
+            appId: "ISI_APP_ID_ANDA"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Jika sudah login, langsung lempar ke index.html
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = "index.html";
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            const errorElement = document.getElementById('authError');
+            const btn = document.getElementById('btnMasuk');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> LOADING...';
+            errorElement.classList.add('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                console.error(error);
+                errorElement.innerText = "Akses ditolak! Cek kembali email & password Anda. ❌";
+                errorElement.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = '<span>MASUK KE DASHBOARD</span><i class="fas fa-arrow-right ml-2 text-sm"></i>';
+            }
+        });
+    </script>
+</body>
+</html>
