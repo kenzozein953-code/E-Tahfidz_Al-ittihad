@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tahfidz Al Ittihad - Dashboard 💼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50">
+
+    <div class="flex min-h-screen">
+        <aside class="w-72 gradient-main text-white hidden lg:flex flex-col shadow-2xl">
+            <div class="p-8">
+                <h1 class="text-3xl font-extrabold tracking-tight">AL ITTIHAD</h1>
+                <p class="text-xs text-emerald-300 font-medium">Digital Tahfidz Solutions 💰</p>
+            </div>
+            <nav class="flex-1 px-6 space-y-2">
+                <a href="#" class="nav-link active"><i class="fas fa-home mr-3"></i> Dashboard</a>
+                <a href="#" class="nav-link" onclick="logoutSistem()"><i class="fas fa-sign-out-alt mr-3 text-red-400"></i> Keluar</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden">
+            <header class="h-20 bg-white border-b flex items-center justify-between px-10 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-800">Assalamu'alaikum, <span class="text-emerald-700">Bos-Tuan Besar</span> 💼</h2>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-10">
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                    <div class="xl:col-span-2 bg-white rounded-3xl shadow-xl p-8 border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center uppercase">
+                            <i class="fas fa-plus-circle mr-3 text-emerald-600"></i> Form Setoran Hafalan
+                        </h3>
+                        <form id="tahfidzForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" id="namaSantri" class="custom-input" placeholder="Nama Santri" required>
+                            <input type="text" id="surah" class="custom-input" placeholder="Surah & Ayat" required>
+                            <select id="kegiatan" class="custom-input">
+                                <option>Setoran Baru</option>
+                                <option>Murojaah</option>
+                            </select>
+                            <select id="status" class="custom-input">
+                                <option>Mumtaz</option>
+                                <option>Jayyid</option>
+                            </select>
+                            <div class="md:col-span-2">
+                                <input type="file" id="buktiFoto" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                            </div>
+                            <button type="submit" id="submitBtn" class="md:col-span-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-2xl shadow-lg transition transform active:scale-95">
+                                SIMPAN KE CLOUD 💰
+                            </button>
+                        </form>
+                    </div>
+                    <div class="bg-emerald-900 rounded-3xl p-8 shadow-2xl text-white">
+                        <h4 class="font-bold text-amber-400 mb-4"><i class="fas fa-robot mr-2"></i> AI Feedback</h4>
+                        <p id="aiFeedback" class="text-sm italic opacity-90">Sistem siap, Bos-Tuan Besar! 💼</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "ISI_API_KEY_ANDA",
+            authDomain: "ISI_DOMAIN_ANDA",
+            projectId: "ISI_ID_ANDA",
+            storageBucket: "ISI_BUCKET_ANDA",
+            appId: "ISI_APP_ID_ANDA"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+        window.auth = getAuth(app);
+        window.storage = getStorage(app);
+        window.fbUtils = { collection, addDoc, serverTimestamp, ref, uploadBytes, getDownloadURL };
+
+        onAuthStateChanged(window.auth, (user) => {
+            if (!user) window.location.href = "auth.html";
+        });
+
+        window.logoutSistem = () => {
+            signOut(window.auth).then(() => window.location.href = "auth.html");
+        };
+    </script>
+    <script src="script.js" type="module"></script>
+</body>
+</html>
